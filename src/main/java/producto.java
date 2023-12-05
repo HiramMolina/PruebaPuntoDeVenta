@@ -413,6 +413,14 @@ import java.time.format.DateTimeFormatter;
         Connection con = getConnection();
         
         try {
+            ps = con.prepareStatement("SELECT * FROM producto WHERE IdProducto = ?");
+            ps.setString(1, txtCodigo.getText());
+            rs = ps.executeQuery();
+            
+            if (rs.next()) { //Si no encuentra registro en el siguiente punto, va a regresar False, por lo que pasa al ELSE directo!!!
+                JOptionPane.showMessageDialog(null, "El producto ya existe");
+            } else {
+                try {   
             ps = con.prepareStatement("INSERT INTO producto(IdProducto, nombreProducto,precioProducto,categoriaProducto,IdProveedor, existencia) VALUES (?,?,?,?,?,?)");
             ps.setString(1, txtCodigo.getText());
             ps.setString(2, txtNombre.getText());
@@ -420,7 +428,6 @@ import java.time.format.DateTimeFormatter;
             ps.setString(5, txtProveedor.getText());
             ps.setString(6, txtExistencia.getText());
             ps.setString(4, cbxCategoria.getSelectedItem().toString());
-            
             //Ejecutar consulta
             //Igualamos a Int si se ejecutó o no correctamente
             int res = ps.executeUpdate();
@@ -436,6 +443,10 @@ import java.time.format.DateTimeFormatter;
             con = getConnection();
         } catch (Exception e) {
             System.err.println(e);
+        }
+            }
+            
+        } catch (Exception e) {
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
